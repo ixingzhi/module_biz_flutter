@@ -1,0 +1,60 @@
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.project{
+                groupId "com.fooww.android.biz.flutter"
+                artifactId "flutter"
+                version "1.0.0"
+            }
+
+            repository(url: "http://localhost:8081/repository/maven-releases/") {
+                authentication(userName: "admin", password: "admin123")
+            }
+            snapshotRepository(url: "http://localhost:8081/repository/maven-snapshots/") {
+                authentication(userName: "admin", password: "admin123")
+            }
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId "com.fooww.android.biz.flutter"
+            artifactId "flutter"
+            version "1.0.0"
+            def projectName = project.getName()
+            artifact "build/host/outputs/repo"
+            pom.withXml {
+                //在pom.xml添加依赖关系
+                def dependenciesNode = asNode().appendNode('dependencies')
+                //拿到所有编译时的依赖
+                def dependenciesList = []
+                dependenciesList.addAll(configurations.implementation.allDependencies)
+                dependenciesList.addAll(configurations.api.allDependencies)
+                dependenciesList.each {
+                    if (null != it.group) {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                        dependencyNode.appendNode('scope', 'compile')
+                    }
+                }
+
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "http://localhost:8081/repository/maven-releases/"
+            credentials {
+                username 'admin'
+                password 'admin123'
+            }
+        }
+    }
+}
