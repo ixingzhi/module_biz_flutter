@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:xml/xml.dart' as xml;
 
-const targetVersion = "1.0.0";
+const targetVersion = "1.0.1";
 
 class DeployObject {
   File pomFile;
@@ -10,15 +10,18 @@ class DeployObject {
 }
 
 void main() {
+  print("test");
   List<File> aarFiles = [];
   List<String> needChangeList = [];
   List<DeployObject> deploys = [];
 
-  final dir = Directory("build/host/outputs/repo");
+  final dir = Directory(
+      "/Users/xiedongdong/Documents/AndroidStudioProjects/module_biz_flutter/build/host/outputs/repo");
 
   // 扫描aar
   for (final file in dir.listSync(recursive: true)) {
     if (file.path.endsWith(".aar")) {
+      print(file.path);
       aarFiles.add(file); // aar文件
       needChangeList.add(
         file.uri.pathSegments[file.uri.pathSegments.length - 3],
