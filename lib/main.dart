@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:module_biz_flutter/routes/main/main_app.dart';
 
 import 'model/route.dart';
 import 'routes/versioninfo/version_info.dart';
@@ -23,17 +24,21 @@ class MyApp extends StatelessWidget {
 }
 
 Widget _widgetForRoute(String routeJson) {
-  // 解析数据
-  Map<String, dynamic> jsonMap = json.decode(routeJson);
-  InitialRoute initialRoute = InitialRoute.fromJson(jsonMap);
+  if (routeJson != null && routeJson.isNotEmpty && routeJson != "/") {
+    // 解析数据
+    Map<String, dynamic> jsonMap = json.decode(routeJson);
+    InitialRoute initialRoute = InitialRoute.fromJson(jsonMap);
 
-  switch (initialRoute.route) {
-    case 'version_info_route':
-      return VersionInfoRoute(initialRoute.data);
-    default:
-      return Center(
-        child: Text('Unknown route: $routeJson', textDirection: TextDirection.ltr),
-      );
+    switch (initialRoute.route) {
+      case 'version_info_route':
+        return VersionInfoRoute(initialRoute.data);
+      default:
+        return Center(
+          child: Text('Unknown route: $routeJson',
+              textDirection: TextDirection.ltr),
+        );
+    }
+  } else {
+    return MainApp();
   }
-
 }
