@@ -60,7 +60,7 @@ class _MainAppListState extends State {
 
   void _initData() {
     _list.add("版本信息");
-    _list.add("关于版本");
+    _list.add("业务日志");
     _list.add("考勤管理");
   }
 
